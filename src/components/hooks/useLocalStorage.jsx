@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const initPhoneBook = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+const useLocalStorage = (key, defaultValue) => {
+  const [state, setState] = useState(() => {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
+  });
 
-export const useLocalSorage = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(window.localStorage.getItem('contacts')) ?? initPhoneBook
-  );
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
 
-  return { contacts, setContacts };
+  return [state || defaultValue, setState];
 };
+
+export default useLocalStorage;
