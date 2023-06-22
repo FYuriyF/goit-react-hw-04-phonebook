@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { showError } from '../components/utils/notification';
 import { ContactForm } from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 import ContactList from './ContactList/ContactList';
@@ -20,6 +20,15 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   const handleAddNewContact = newContact => {
+    const matchName = contacts.some(
+      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+    );
+
+    if (matchName) {
+      showError(`${newContact.name} is already in contacts`);
+      return;
+    }
+
     setContacts(prevState => [...prevState, newContact]);
   };
 
@@ -43,10 +52,7 @@ const App = () => {
   return (
     <div>
       <h1 className={css.title}>Phonebook</h1>
-      <ContactForm
-        onSubmit={handleAddNewContact}
-        contactsName={contacts.map(contact => contact.name)}
-      />
+      <ContactForm onSubmit={handleAddNewContact} />
 
       <h2 className={css.title}>Contacts</h2>
       <div className={css.contact_list_container}>

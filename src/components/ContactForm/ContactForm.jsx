@@ -5,7 +5,7 @@ import { showError } from '../utils/notification';
 
 import css from './ContactForm.module.css';
 
-export const ContactForm = ({ onSubmit, contactsName }) => {
+export const ContactForm = ({ onSubmit }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -29,12 +29,9 @@ export const ContactForm = ({ onSubmit, contactsName }) => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    const matchName = contactsName.some(
-      contactName => contactName.toLowerCase() === name.toLowerCase()
-    );
-
-    if (matchName) {
-      return showError(`${name} is already in contacts`);
+    if (!name || !number) {
+      showError('Please enter name and number');
+      return;
     }
 
     const newContact = {
@@ -92,7 +89,6 @@ export const ContactForm = ({ onSubmit, contactsName }) => {
 
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  contactsName: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 export default ContactForm;
